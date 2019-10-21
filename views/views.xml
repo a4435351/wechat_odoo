@@ -1,0 +1,66 @@
+<odoo>
+  <data>
+    <record id="wechat_menu_form" model="ir.ui.view">
+      <field name="name">微信菜单</field>
+      <field name="model">wechat.menu</field>
+      <field name="arch" type="xml">
+        <form>
+          <sheet>
+            <!-- <div class="oe_button_box" name="button_box">
+              <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
+                <field name="active" widget="boolean_button" options="{&quot;terminology&quot;: &quot;archive&quot;}"/>
+              </button>
+            </div> -->
+            <div class="oe_title">
+              <label for="name" class="oe_edit_only" string="菜单名称"/>
+              <h1>
+                <field name="name" placeholder="菜单名称..."/>
+              </h1>
+            </div>
+            <group>
+              <group name="常规">
+                <field name="level"/>
+                <field name="type"/>
+                <field name="parent_id" attrs="{'invisible':[('level','=','1')],'required':[('level','=','2')]}"/>
+                <field name="key" attrs="{'required':[('type','in',('click', 'scancode_push', 'scancode_waitmsg',
+               'pic_sysphoto', 'pic_photo_or_album', 'pic_weixin', 'location_select'))]}"/>
+                <field name="media_id" attrs="{'required':[('type','in',('media_id', 'view_limited'))]}"/>
+                <field name="url" attrs="{'required':[('type','in',('view', 'miniprogram'))]}"/>
+              </group>
+              <group name="小程序">
+                <field name="appid" attrs="{'invisible':[('type','!=','miniprogram')],'required':[('type','=','miniprogram')]}"/>
+                <field name="pagepath" attrs="{'invisible':[('type','!=','miniprogram')],'required':[('type','=','miniprogram')]}"/>
+              </group>
+            </group>
+            <notebook>
+            </notebook>
+          </sheet>
+        </form>
+      </field>
+    </record>
+
+    <record id="wechat_menu_tree_menu" model="ir.ui.view">
+      <field name="name">微信公众号菜单列表</field>
+      <field name="model">wechat.menu</field>
+      <field name="arch" type="xml">
+        <tree string="">
+          <field name="name"/>
+          <field name="type"/>
+          <field name="level"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_wechat_menu" model="ir.actions.act_window">
+      <field name="name">微信公众号菜单</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">wechat.menu</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_type">form</field>
+    </record>
+
+    <menuitem id="wechat_root" name="公众号"/>
+    <menuitem id="wechat_base" name="基础配置" parent="wechat_root"/>
+    <menuitem id="wechat_menu" name="菜单" parent="wechat_base" action="action_wechat_menu"/>
+  </data>
+</odoo>
