@@ -14,14 +14,15 @@ class Wechat(http.Controller):
     @http.route('/wechat/auth', auth='public')
     def index(self, **kw):
         """验证微信服务器消息"""
+        signature = request.params.get("signature",None)
+        timestamp = request.params.get("timestamp",None)
+        echostr = request.params.get("echostr",None)
+        nonce = request.params.get("nonce",None)
+        token = request.env["ir.config_parameter"].sudo().get_param("wechat.token")
         try:
-            signature = request.params.get("signature",None)
-            timestamp = request.params.get("timestamp",None)
-            echostr = request.params.get("echostr",None)
-            nonce = request.params.get("nonce",None)
-            token = request.env["ir.config_parameter"].sudo().get_param("wechat.token")
             check_signature(token, signature, timestamp, nonce)
         except InvalidSignatureException as ex:
             _logging.error("微信公众号服务器验证失败:{}".format(traceback.format_exc()))
         except Exception as err:
             _logging.error("验证微信公众号服务器失败:{}".format(traceback.format_exc()))
+        return echostr        
