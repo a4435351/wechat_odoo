@@ -4,6 +4,7 @@ from odoo.http import request
 from wechatpy.utils import check_signature
 from wechatpy import parse_message
 from wechatpy.exceptions import InvalidSignatureException
+from models.service import WechatResponse
 import logging
 import traceback
 
@@ -30,5 +31,8 @@ class Wechat(http.Controller):
             # 服务器验证请求
             return echostr
         
+        ## 没有正确响应的情况下，微信服务器会推送三次消息，然后判定服务异常
         data = parse_message(request.httprequest.data.decode("utf-8"))
         _logging.info("微信服务器推送的消息：{}".format(data))
+        response = WechatResponse(data)
+        response.send()
