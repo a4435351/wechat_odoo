@@ -199,7 +199,7 @@ class wechat_menu(models.Model):
         """
         res = super(wechat_menu, self).unlink()
         menus = self.search([])
-        if menus:
+        if not menus:
             try:
                 appid = self.env["ir.config_parameter"].sudo(
                 ).get_param("wechat.appid")
