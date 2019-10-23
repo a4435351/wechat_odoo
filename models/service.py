@@ -68,7 +68,7 @@ class WechatResponse(object):
         if self.data.type == "text":
             # [FIXME] 暂时只处理了自动回复和关键字回复
             # 处理是否有满足条件的关键字规则
-            reply = request.env["wechat.auto.reply"].search(
+            reply = request.env["wechat.auto.reply"].sudo().search(
                 [('key', 'ilike', '%{}%'.format(self.data.content))], limit=1)
             if reply:
                 # 是否满足规则的匹配条件
@@ -77,7 +77,7 @@ class WechatResponse(object):
                     return reply.reply(self.data)
 
             # 收到消息回复
-            reply = request.env["wechat.auto.reply"].search(
+            reply = request.env["wechat.auto.reply"].sudo().search(
                 [('type', '=', 'message')], limit=1)
             return reply.reply(self.data)
 
