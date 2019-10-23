@@ -68,14 +68,13 @@ class WechatResponse(object):
         if self.data.type == "text":
             # [FIXME] 暂时只处理了自动回复和关键字回复
             # 处理是否有满足条件的关键字规则
-            reply = request.env["wechat.auto.reply"].sudo().search(
-                [('key', 'ilike', '%{}%'.format(self.data.content))], limit=1)
-            if reply:
+            replies = request.env["wechat.auto.reply"].sudo().search(
+                [('type', '=', 'key')])
+            for reply in replies:
                 # 是否满足规则的匹配条件
                 _logger.debug("关键字匹配：key={},operator={},data={}".format(
                     reply.key, reply.operator, self.data.content))
-                if reply.type == "key" and ((reply.operator == "like" and reply.key == self.data.content) or (reply.operator == "ilike" and reply.key in self.data.content)):
-                    # 精确匹配
+                if (reply.operator == "like" and reply.key == self.data.content) or (reply.operator == "ilike" and reply.key in self.data.content):
                     return reply.reply(self.data)
 
             # 收到消息回复
