@@ -89,5 +89,56 @@
 
     <menuitem id="wechat_message" name="消息" parent="wechat_root"/>
     <menuitem id="wechat_message_list" name="消息列表" parent="wechat_message" action="action_wechat_message"/>
+
+    <!--自动回复-->
+    <record id="wechat_auto_replay_form" model="ir.ui.view">
+      <field name="name">自动回复</field>
+      <field name="model">wechat.auto.replay</field>
+      <field name="arch" type="xml">
+        <sheet>
+          <div class="oe_title">
+            <label for="name" class="oe_edit_only" string="规则名称"/>
+            <h1>
+              <field name="name" placeholder="规则名称..."/>
+            </h1>
+          </div>
+          <group>
+            <group name="常规">
+              <field name="type"/>
+              <field name="key" attrs="{'invisible':[('type','!=','key')]}"/>
+              <field name="operator" attrs="{'invisible':[('type','!=','key')]}"/>
+              <field name="reply_type" />
+              <field name="text" />
+            </group>
+          </group>
+          <notebook>
+          </notebook>
+        </sheet>
+      </field>
+    </record>
+
+    <record id="wechat_auto_replay_tree" model="ir.ui.view">
+      <field name="name">自动回复</field>
+      <field name="model">wechat.auto.reply</field>
+      <field name="priority">1</field>
+      <field name="arch" type="xml">
+        <tree string="">
+          <field name="name"/>
+          <field name="type"/>
+          <field name="reply_type"/>
+          <field name="text" />
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_wechat_auto_replay" model="ir.actions.act_window">
+      <field name="name">自动回复</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">wechat.auto.reply</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_type">form</field>
+    </record>
+
+    <menuitem id="wechat_auto_reply" name="自动回复" parent="wechat_message"/>
   </data>
 </odoo>
