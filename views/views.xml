@@ -73,6 +73,8 @@
           <field name="target"/>
           <field name="create_time"/>
           <field name="type"/>
+          <field name="content"/>
+          <field name="data"/>
         </tree>
       </field>
     </record>
