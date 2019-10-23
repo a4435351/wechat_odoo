@@ -4,7 +4,7 @@ from odoo.http import request
 from wechatpy.utils import check_signature
 from wechatpy import parse_message
 from wechatpy.exceptions import InvalidSignatureException
-from models.service import WechatResponse
+from ..models.service import WechatResponse
 import logging
 import traceback
 
