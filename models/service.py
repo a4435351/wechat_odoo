@@ -7,6 +7,7 @@
 from wechatpy.messages import TextMessage
 from wechatpy.replies import TextReply
 from odoo.http import request
+from datetime import datetime
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -24,7 +25,7 @@ class WechatResponse(object):
         msg_obj.create({
             "source": self.data.source,
             "target": self.data.target,
-            "create_time": self.data.create_time,
+            "create_time": datetime.utcfromtimestamp(int(self.data.create_time)),
             "type": self.data.type
         })
 
