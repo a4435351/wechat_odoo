@@ -6,6 +6,7 @@
 
 from wechatpy.messages import TextMessage
 from wechatpy.replies import TextReply
+from odoo.http import request
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -15,6 +16,17 @@ class WechatResponse(object):
 
     def __init__(self, data):
         self.data = data
+        self._save_message()
+
+    def _save_message(self):
+        """保存消息到本地"""
+        msg_obj = request.env["wechat.message"].sudo()
+        msg_obj.create({
+            "source": self.data.source,
+            "target": self.data.target,
+            "create_time": self.data.create_time,
+            "type": self.data.type
+        })
 
     def _parse_data(self):
         """处理微信推送的消息"""
@@ -24,5 +36,5 @@ class WechatResponse(object):
     def send(self):
         """响应"""
         data = self._parse_data()
-        _logger.info("响应微信消息：{}".format(data))
+        _logger.debug("响应微信消息：{}".format(data))
         return data
