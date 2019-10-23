@@ -3,6 +3,7 @@
 # @Author  : Kevin Kong (kfx2007@163.com)
 
 from odoo import api, fields, models, _
+from wechatpy.replies import TextReply
 
 CONDITIONS = [
     ("focus", "被关注回复"),
@@ -39,7 +40,14 @@ class WechatAutoReply(models.Model):
     type = fields.Selection(selection=CONDITIONS, string="触发条件")
     key = fields.Char("关键字")
     operator = fields.Selection(
-        selection=[('like', "精确匹配"), ('ilike', '模糊匹配')])
+        selection=[('like', "精确匹配"), ('ilike', '模糊匹配')], string="匹配条件")
     reply_type = fields.Selection(selection=REPLY_TYPES, string="回复类型")
     # [FIXME] 暂时只实现了文本回复
     text = fields.Text("回复内容")
+
+    @api.model
+    def reply(self, message):
+        """回复"""
+        ## [FIXME] 暂时只实现了文本回复
+        if self.reply_type == "text":
+            return TextReply(content=self.text, message=message).render()

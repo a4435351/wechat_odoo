@@ -65,6 +65,22 @@ class WechatResponse(object):
     def _parse_data(self):
         """处理微信推送的消息"""
         _logger.info("微信推送消息类型：{}".format(self.data.type))
+        if self.data.type == "text":
+            # [FIXME] 暂时只处理了自动回复和关键字回复
+            # 处理是否有满足条件的关键字规则
+            reply = request.env["wechat.auto.reply"].search(
+                [('key', 'ilike', '%{}%'.format(self.data.content))], limit=1)
+            if reply:
+                # 是否满足规则的匹配条件
+                if reply.type == "key" and ((reply.operator == "like" and reply.key == self.data.content) or (reply.operator == "ilike" and reply.key in self.data.content)):
+                    # 精确匹配
+                    return reply.reply(self.data)
+
+            # 收到消息回复
+            reply = request.env["wechat.auto.reply"].search(
+                [('type', '=', 'message')], limit=1)
+            return reply.reply(self.data)
+
         return TextReply(content="您好，公众号正在建设中，感谢关注", message=self.data).render()
 
     def send(self):
