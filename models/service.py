@@ -8,6 +8,7 @@ from wechatpy.messages import TextMessage
 from wechatpy.replies import TextReply
 from odoo.http import request
 from datetime import datetime
+import json
 import logging
 
 _logger = logging.getLogger(__name__)
@@ -22,12 +23,44 @@ class WechatResponse(object):
     def _save_message(self):
         """保存消息到本地"""
         msg_obj = request.env["wechat.message"].sudo()
-        msg_obj.create({
+        data = {
             "source": self.data.source,
             "target": self.data.target,
-            "create_time": datetime.strftime(datetime.utcfromtimestamp(int(self.data.create_time)), '%Y-%m-%d %H:%M:%S'),
+            "create_time": datetime.strftime(datetime.utcfromtimestamp(int(self.data.time)), '%Y-%m-%d %H:%M:%S'),
             "type": self.data.type
-        })
+        }
+        if self.data.type == "text":
+            data["content"] = self.data.content
+        if self.data.type == "voice":
+            # 语音消息
+            data["data"] = json.dumps({
+                "media_id": self.data.media_id,
+                "format": self.data.format,
+                "recognition": self.data.recognition
+            })
+        if self.data.type in ("video","shortvideo"):
+            # 视频消息
+            data["data"] = json.dumps({
+                "media_id": self.data.media_id,
+                "thumb_media_id": self.data.thumb_media_id,
+            })
+        if self.data.type == "location":
+            # 地理位置消息
+            data["data"] = json.dumps({
+                "location_x": self.data.location_x,
+                "location_y": self.data.location_y,
+                "scale": self.data.scale,
+                "label": self.data.label,
+                "location": self.data.location
+            })
+        if self.data.type == "link":
+            # 连接消息
+            data["data"] = json.dumps({
+                "title": self.data.title,
+                "description": self.data.description,
+                "url": self.data.url,
+            })
+        msg_obj.create()
 
     def _parse_data(self):
         """处理微信推送的消息"""

@@ -12,3 +12,5 @@ class WechatMessage(models.Model):
     target = fields.Char("目标用户")
     create_time = fields.Datetime("发送时间")
     type = fields.Char("消息类型")
+    content = fields.Char("文本消息")
+    data = fields.Text("媒体消息")
