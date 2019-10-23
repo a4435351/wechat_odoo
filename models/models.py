@@ -3,7 +3,7 @@
 # @Author  : Kevin Kong (kfx2007@163.com)
 
 from odoo import api, fields, models, _
-from odoo.exceptions import UserError,AccessDenied
+from odoo.exceptions import UserError, AccessDenied
 from wechatpy import WeChatClient
 import logging
 import traceback
@@ -121,7 +121,7 @@ class wechat_menu(models.Model):
                 data["button"].append(menu_data)
         return data
 
-    def _create_wechat_menu(self,data):
+    def __create_wechat_menu(self, data):
         """创建微信菜单"""
         try:
             appid = self.env["ir.config_parameter"].sudo(
@@ -133,7 +133,7 @@ class wechat_menu(models.Model):
         except Exception as err:
             _logger.error("创建微信公众号菜单异常：{}".format(traceback.format_exc()))
 
-    def _update_wechat_menu(self,data):
+    def __update_wechat_menu(self, data):
         """更新微信菜单"""
         try:
             appid = self.env["ir.config_parameter"].sudo(
@@ -145,6 +145,14 @@ class wechat_menu(models.Model):
         except Exception as err:
             _logger.error("更新微信公众号菜单异常：{}".format(traceback.format_exc()))
             raise AccessDenied(err)
+
+    def _create_wechat_menu(self):
+        """创建微信自定义菜单"""
+        self.__create_wechat_menu(self._get_menu_data())
+
+    def _update_wechat_menu(self):
+        """更新微信自定义菜单"""
+        self.__update_wechat_menu(self._get_menu_data())
 
     @api.model
     def create(self, value):
@@ -162,7 +170,7 @@ class wechat_menu(models.Model):
             if len(menus) >= 5:
                 raise UserError("二级菜单最多5个")
         res = super(wechat_menu, self).create(value)
-        self._create_wechat_menu(self._get_menu_data())
+        self._create_wechat_menu()
         return res
 
     @api.multi
@@ -180,5 +188,30 @@ class wechat_menu(models.Model):
                 [('level', '=', '2'), ('parent_id', '=', self.parent_id.id)])
             if len(menus) >= 5:
                 raise UserError("二级菜单最多5个")
-        self._update_wechat_menu(self._get_menu_data())
+        self._update_wechat_menu()
+        return res
+
+    @api.multi
+    def unlink(self):
+        """
+        删除菜单
+        仅当菜单数量为0时删除自定义菜单
+        """
+        res = super(wechat_menu, self).unlink()
+        menus = self.search([])
+        if menus:
+            try:
+                appid = self.env["ir.config_parameter"].sudo(
+                ).get_param("wechat.appid")
+                appsecret = self.env["ir.config_parameter"].sudo(
+                ).get_param("wechat.secret")
+                client = WeChatClient(appid, appsecret)
+                client.menu.delete()
+            except Exception as err:
+                _logger.error("删除微信公众号自定义菜单异常：{}".format(
+                    traceback.format_exc()))
+                raise AccessDenied(err)
+        else:
+            # 更新菜单
+            self._update_wechat_menu()
         return res
