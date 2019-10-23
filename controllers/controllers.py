@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import http
+from odoo.http import Response
 from odoo.http import request
 from wechatpy.utils import check_signature
 from wechatpy import parse_message

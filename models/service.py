@@ -23,4 +23,6 @@ class WechatResponse(object):
 
     def send(self):
         """响应"""
-        return self._parse_data()
+        data = self._parse_data()
+        _logger.info("响应微信消息：{}".format(data))
+        return data
