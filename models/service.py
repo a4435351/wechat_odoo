@@ -60,7 +60,7 @@ class WechatResponse(object):
                 "description": self.data.description,
                 "url": self.data.url,
             })
-        msg_obj.create()
+        msg_obj.create(data)
 
     def _parse_data(self):
         """处理微信推送的消息"""
