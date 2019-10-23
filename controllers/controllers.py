@@ -11,9 +11,10 @@ _logging = logging.getLogger(__name__)
 
 
 class Wechat(http.Controller):
-    @http.route('/wechat/auth', auth='public')
+    @http.route('/wechat/auth', auth='public', method=["GET"])
     def index(self, **kw):
         """验证微信服务器消息"""
+        if request.
         signature = request.params.get("signature",None)
         timestamp = request.params.get("timestamp",None)
         echostr = request.params.get("echostr",None)
@@ -25,4 +26,9 @@ class Wechat(http.Controller):
             _logging.error("微信公众号服务器验证失败:{}".format(traceback.format_exc()))
         except Exception as err:
             _logging.error("验证微信公众号服务器失败:{}".format(traceback.format_exc()))
-        return echostr        
+        return echostr
+
+    @http.route("/wechat/auth",auth="public",method="POST") 
+    def callback(self,**kw):
+        _logger.info("---------")
+        _logger.info(kw)
