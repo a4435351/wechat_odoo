@@ -29,7 +29,7 @@ class WechatResponse(object):
             "create_time": datetime.strftime(datetime.utcfromtimestamp(int(self.data.time)), '%Y-%m-%d %H:%M:%S'),
             "type": self.data.type
         }
-        if self.data.type == "text":
+        if self.data.type in ("text", "image"):
             data["content"] = self.data.content
         if self.data.type == "voice":
             # 语音消息
@@ -38,7 +38,7 @@ class WechatResponse(object):
                 "format": self.data.format,
                 "recognition": self.data.recognition
             })
-        if self.data.type in ("video","shortvideo"):
+        if self.data.type in ("video", "shortvideo"):
             # 视频消息
             data["data"] = json.dumps({
                 "media_id": self.data.media_id,
