@@ -32,8 +32,8 @@ class WechatMessage(models.Model):
     data = fields.Text("媒体消息")
 
 
-class WechatAutoReplay(models.Model):
-    _name = "wechat.auto.replay"
+class WechatAutoReply(models.Model):
+    _name = "wechat.auto.reply"
 
     name = fields.Char("规则名称")
     type = fields.Selection(selection=CONDITIONS, string="触发条件")
