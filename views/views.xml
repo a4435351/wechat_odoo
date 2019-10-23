@@ -141,6 +141,6 @@
       <field name="view_type">form</field>
     </record>
 
-    <menuitem id="wechat_auto_reply" name="自动回复" parent="wechat_message"/>
+    <menuitem id="wechat_auto_reply" name="自动回复" action="action_wechat_auto_replay" parent="wechat_message"/>
   </data>
 </odoo>
