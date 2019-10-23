@@ -35,4 +35,4 @@ class Wechat(http.Controller):
         data = parse_message(request.httprequest.data.decode("utf-8"))
         _logging.info("微信服务器推送的消息：{}".format(data))
         response = WechatResponse(data)
-        response.send()
+        return response.send()
