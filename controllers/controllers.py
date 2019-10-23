@@ -14,7 +14,6 @@ class Wechat(http.Controller):
     @http.route('/wechat/auth', auth='public', method=["GET"])
     def index(self, **kw):
         """验证微信服务器消息"""
-        if request.
         signature = request.params.get("signature",None)
         timestamp = request.params.get("timestamp",None)
         echostr = request.params.get("echostr",None)
