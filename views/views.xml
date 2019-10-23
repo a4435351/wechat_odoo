@@ -95,25 +95,27 @@
       <field name="name">自动回复</field>
       <field name="model">wechat.auto.replay</field>
       <field name="arch" type="xml">
-        <sheet>
-          <div class="oe_title">
-            <label for="name" class="oe_edit_only" string="规则名称"/>
-            <h1>
-              <field name="name" placeholder="规则名称..."/>
-            </h1>
-          </div>
-          <group>
-            <group name="常规">
-              <field name="type"/>
-              <field name="key" attrs="{'invisible':[('type','!=','key')]}"/>
-              <field name="operator" attrs="{'invisible':[('type','!=','key')]}"/>
-              <field name="reply_type" />
-              <field name="text" />
+        <form>
+          <sheet>
+            <div class="oe_title">
+              <label for="name" class="oe_edit_only" string="规则名称"/>
+              <h1>
+                <field name="name" placeholder="规则名称..."/>
+              </h1>
+            </div>
+            <group>
+              <group name="常规">
+                <field name="type"/>
+                <field name="key" attrs="{'invisible':[('type','!=','key')]}"/>
+                <field name="operator" attrs="{'invisible':[('type','!=','key')]}"/>
+                <field name="reply_type" />
+                <field name="text" />
+              </group>
             </group>
-          </group>
-          <notebook>
-          </notebook>
-        </sheet>
+            <notebook>
+            </notebook>
+          </sheet>
+        </form>
       </field>
     </record>
 
