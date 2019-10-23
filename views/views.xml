@@ -93,7 +93,7 @@
     <!--自动回复-->
     <record id="wechat_auto_replay_form" model="ir.ui.view">
       <field name="name">自动回复</field>
-      <field name="model">wechat.auto.replay</field>
+      <field name="model">wechat.auto.reply</field>
       <field name="arch" type="xml">
         <form>
           <sheet>
