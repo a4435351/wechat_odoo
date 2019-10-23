@@ -25,7 +25,7 @@ class WechatResponse(object):
         msg_obj.create({
             "source": self.data.source,
             "target": self.data.target,
-            "create_time": datetime.utcfromtimestamp(int(self.data.create_time)),
+            "create_time": datetime.strftime(datetime.utcfromtimestamp(int(self.data.create_time)), '%Y-%m-%d %H:%M:%S'),
             "type": self.data.type
         })
 
