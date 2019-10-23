@@ -62,5 +62,30 @@
     <menuitem id="wechat_root" name="公众号"/>
     <menuitem id="wechat_base" name="基础配置" parent="wechat_root"/>
     <menuitem id="wechat_menu" name="菜单" parent="wechat_base" action="action_wechat_menu"/>
+
+    <!--消息-->
+    <record id="wechat_message_list" model="ir.ui.view">
+      <field name="name">消息列表</field>
+      <field name="model">wechat.message</field>
+      <field name="arch" type="xml">
+        <tree>
+          <field name="source"/>
+          <field name="target"/>
+          <field name="create_time"/>
+          <field name="type"/>
+        </tree>
+      </field>
+    </record>
+
+    <record id="action_wechat_message" model="ir.actions.act_window">
+      <field name="name">消息列表</field>
+      <field name="type">ir.actions.act_window</field>
+      <field name="res_model">form</field>
+      <field name="view_mode">tree,form</field>
+      <field name="view_type">form</field>
+    </record>
+
+    <menuitem id="wechat_message" name="消息" parent="wechat_root"/>
+    <menuitem id="wechat_message_list" name="消息列表" parent="wechat_message" action="action_wechat_message"/>
   </data>
 </odoo>
