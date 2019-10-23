@@ -72,6 +72,8 @@ class WechatResponse(object):
                 [('key', 'ilike', '%{}%'.format(self.data.content))], limit=1)
             if reply:
                 # 是否满足规则的匹配条件
+                _logger.debug("关键字匹配：key={},operator={},data={}".format(
+                    reply.key, reply.operator, self.data.content))
                 if reply.type == "key" and ((reply.operator == "like" and reply.key == self.data.content) or (reply.operator == "ilike" and reply.key in self.data.content)):
                     # 精确匹配
                     return reply.reply(self.data)
